@@ -16,6 +16,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://artifacts.consensys.net/public/maven/maven/") }
+
     }
 }
 
