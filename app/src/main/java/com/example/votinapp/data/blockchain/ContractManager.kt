@@ -1,24 +1,23 @@
 package com.example.votinapp.data.blockchain
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.invoke
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
-import org.web3j.protocol.core.methods.request.Transaction
 import org.web3j.protocol.core.methods.response.TransactionReceipt
 import java.math.BigInteger
 
-class ContractManager {
-    private val contract = Voting_sol_Voting.load(
-        Web3Manager.CONTRACT_ADDRESS,
-        Web3Manager.web3j,
-        Web3Manager.credentials,
-        Web3Manager.gasProvider
-    )
+object ContractManager {
+    private val contract by lazy {
+        Voting_sol_Voting.load(
+            Web3Manager.CONTRACT_ADDRESS,
+            Web3Manager.web3j,
+            Web3Manager.credentials,
+            Web3Manager.gasProvider
+        )
+    }
 
     suspend fun vote(candidateIndex: Int): TransactionReceipt {
         return withContext(Dispatchers.IO) {
-            contract.vote(BigInteger.valueOf(candidateIndex.toLong())).send()
+            contract.vote(candidateIndex.toBigInteger()).send()
 
         }
     }
@@ -26,6 +25,12 @@ class ContractManager {
     suspend fun getCandidates(): List<Voting_sol_Voting.Candidate> {
         return withContext(Dispatchers.IO) {
             contract.getCandidates().send()
+        }
+    }
+
+    suspend fun getCandidateVotes(candidateIndex: Int): BigInteger {
+        return withContext(Dispatchers.IO) {
+            contract.candidates(candidateIndex.toBigInteger()).send().component2()
         }
     }
 }
