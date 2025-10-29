@@ -30,7 +30,7 @@ object ContractManager {
 
     suspend fun getCandidateVotes(candidateIndex: Int): BigInteger {
         return withContext(Dispatchers.IO) {
-            contract.candidates(candidateIndex.toBigInteger()).send().votes
+            contract.candidates(candidateIndex.toBigInteger()).send().component2()
         }
     }
 }
