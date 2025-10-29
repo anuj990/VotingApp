@@ -17,7 +17,7 @@ object ContractManager {
 
     suspend fun vote(candidateIndex: Int): TransactionReceipt {
         return withContext(Dispatchers.IO) {
-            contract.vote(BigInteger.valueOf(candidateIndex.toLong())).send()
+            contract.vote(candidateIndex.toBigInteger()).send()
 
         }
     }
@@ -30,7 +30,7 @@ object ContractManager {
 
     suspend fun getCandidateVotes(candidateIndex: Int): BigInteger {
         return withContext(Dispatchers.IO) {
-            contract.candidates(BigInteger.valueOf(candidateIndex.toLong())).send().votes
+            contract.candidates(candidateIndex.toBigInteger()).send().votes
         }
     }
 }

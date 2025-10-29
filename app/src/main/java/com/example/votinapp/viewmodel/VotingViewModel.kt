@@ -44,12 +44,11 @@ class VotingViewModel(
                 repository.vote(candidateId)
                 // Update only the voted candidate instead of reloading all candidates
                 val updatedVotes = repository.getCandidateVotes(candidateId)
-                _candidates.value = _candidates.value.map { candidate ->
-                    if (candidate.id == candidateId) {
-                        candidate.copy(votes = updatedVotes)
-                    } else {
-                        candidate
-                    }
+                val currentList = _candidates.value.toMutableList()
+                val index = currentList.indexOfFirst { it.id == candidateId }
+                if (index != -1) {
+                    currentList[index] = currentList[index].copy(votes = updatedVotes)
+                    _candidates.value = currentList
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
