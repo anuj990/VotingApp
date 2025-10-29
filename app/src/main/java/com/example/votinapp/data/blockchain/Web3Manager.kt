@@ -12,9 +12,9 @@ object Web3Manager {
     private const val PRIVATE_KEY = "dbc741a5152529a9f17c10ddec36f96ed27f7ae92da7fb4c9cd6a8f8240ee08c"
     const val CONTRACT_ADDRESS = "0xb27A31f1b0AF2946B7F582768f03239b1eC07c2c"
 
-    val web3j: Web3j = Web3j.build(HttpService(NODE_URL))
-    val credentials: Credentials = Credentials.create(PRIVATE_KEY)
-    val gasProvider = DefaultGasProvider()
+    val web3j: Web3j by lazy { Web3j.build(HttpService(NODE_URL)) }
+    val credentials: Credentials by lazy { Credentials.create(PRIVATE_KEY) }
+    val gasProvider by lazy { DefaultGasProvider() }
 
 
 }

@@ -1,7 +1,5 @@
 package com.example.votinapp.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.votinapp.data.model.Candidate
@@ -11,9 +9,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
-class VotingViewModel : ViewModel() {
-
-    private val repository = VotingRepository()
+class VotingViewModel(
+    private val repository: VotingRepository = VotingRepository()
+) : ViewModel() {
 
     private val _candidates = MutableStateFlow<List<Candidate>>(emptyList())
 
@@ -44,7 +42,15 @@ class VotingViewModel : ViewModel() {
             _isLoading.value = true
             try {
                 repository.vote(candidateId)
-                loadCandidates()
+                // Update only the voted candidate instead of reloading all candidates
+                val updatedVotes = repository.getCandidateVotes(candidateId)
+                _candidates.value = _candidates.value.map { candidate ->
+                    if (candidate.id == candidateId) {
+                        candidate.copy(votes = updatedVotes)
+                    } else {
+                        candidate
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
